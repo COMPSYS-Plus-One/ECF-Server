@@ -5,5 +5,9 @@
     <RootNamespace>ECF_Server</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.OrTools" Version="7.8.7959" />
+  </ItemGroup>
+
 
 </Project>
