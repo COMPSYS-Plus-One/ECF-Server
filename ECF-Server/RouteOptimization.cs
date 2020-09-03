@@ -107,7 +107,7 @@ public class RouteOptimization
         // Instantiate the data problem.
         DataModel data = new DataModel(); //TODO pass addresses and apiKey into dataModel instance
 
-        data.setTimeMatrix(create_time_matrix(addresses, apiKey))
+        data.setTimeMatrix(create_time_matrix(addresses, apiKey));
 
         // Create Routing Index Manager
         RoutingIndexManager manager = new RoutingIndexManager(
@@ -194,13 +194,46 @@ public class RouteOptimization
         // Send q requests, returning max_rows rows per request.
         for(int i = 0; i < q; i++)
         {
-            List<string> origin_addresses = addresses[i * max_rows: (i + 1) * max_rows]
-            string response = send_request(origin_addresses, dest_addresses, API_key)
-            distance_matrix += build_distance_matrix(response)
+            //List<string> origin_addresses = addresses[i * max_rows: (i + 1) * max_rows]
+            //string response = send_request(origin_addresses, dest_addresses, API_key)
+            //distance_matrix += build_distance_matrix(response)
         }
-
-
         return distance_matrix;
-
     }
+
+    //def send_request(origin_addresses, dest_addresses, API_key):  
+    private string send_request(List<string> origin_addresses, List<string> dest_addresses, string API_key)
+    { //Build and send request for the given origin and destination addresses.
+        string request = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial'
+        string origin_address_str = build_address_str(origin_addresses);
+        string dest_address_str = build_address_str(dest_addresses);
+        request = request + "&origins=" + origin_address_str + "&destinations=" + 
+                            dest_address_str + "&key=" + API_key;
+        jsonResult = urllib.urlopen(request).read();
+        
+    }
+   
+    /*
+        request = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial'
+        origin_address_str = build_address_str(origin_addresses)
+        dest_address_str = build_address_str(dest_addresses)
+        request = request + '&origins=' + origin_address_str + '&destinations=' + \
+                            dest_address_str + '&key=' + API_key
+        jsonResult = urllib.urlopen(request).read()
+        response = json.loads(jsonResult)
+        return response
+    */
+
+    private string build_address_str(List<string> addresses) //# Build a pipe-separated string of addresses
+    {
+        string address_str = String.Join("|", addresses);
+        /*for i in range(len(addresses) - 1):
+          address_str += addresses[i] + '|'
+        address_str += addresses[-1]*/
+        return address_str;
+    }
+        
+     
+
+  
 }
