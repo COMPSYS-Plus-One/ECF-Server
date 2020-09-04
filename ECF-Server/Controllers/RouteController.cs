@@ -49,8 +49,7 @@ namespace ECF_Server.Controllers
         {
             RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
-            routeOptimization.test(addressList.addresses);
-            return addressList.addresses;
+            return routeOptimization.route(addressList.addresses);
         }
 
         // PUT api/<RouteController>/5

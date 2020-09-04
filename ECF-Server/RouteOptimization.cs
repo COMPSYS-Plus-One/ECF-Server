@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.Diagnostics;
+using System.Timers;
 
 /// <summary>
 ///   Vehicles Routing Problem (VRP) with Time Windows.
@@ -20,28 +21,18 @@ public class RouteOptimization
     private HttpClient _httpClient;
     class DataModel
     {
-        public long[,] TimeMatrix = { };
+        public long[,] TimeMatrix;
 
         public long[,] TimeWindows = {
-          {0, 5},    // depot
-          {7, 12},   // 1
-          {10, 15},  // 2
-          {16, 18},  // 3
-          {10, 13},  // 4
-          {0, 5},    // 5
-          {5, 10},   // 6
-          {0, 4},    // 7
-          {5, 10},   // 8
-          {0, 3},    // 9
-          {10, 16},  // 10
-          {10, 15},  // 11
-          {0, 5},    // 12
-          {5, 10},   // 13
-          {7, 8},    // 14
-          {10, 15},  // 15
-          {11, 15},  // 16
-        };
-        public int VehicleNumber = 4;
+                {0, 9999999999999},    // depot
+                {0, 9999999999999},   // 1
+                {0, 999999999999},  // 2
+                {0, 999999999999},  // 3
+                {0, 999999999999}  // 4
+
+              };
+        public int VehicleNumber = 1;
+
         public int Depot = 0;
 
         public void setTimeMatrix(long[,] newTimeMatrix)
@@ -58,62 +49,35 @@ public class RouteOptimization
     /// <summary>
     ///   Print the solution.
     /// </summary>
-    private void PrintSolution(
+    private List<string> GetSolution(
         in DataModel data,
         in RoutingModel routing,
         in RoutingIndexManager manager,
-        in Assignment solution)
+        in Assignment solution,
+        in List<string> addresses)
     {
         RoutingDimension timeDimension = routing.GetMutableDimension("Time");
         // Inspect solution.
-        long totalTime = 0;
-        for (int i = 0; i < data.VehicleNumber; ++i)
+
+        List<string> bestRoute = new List<string>();
+      
+        var index = routing.Start(0);
+        string currentAddress;
+        while (routing.IsEnd(index) == false)
         {
-            Console.WriteLine("Route for Vehicle {0}:", i);
-            var index = routing.Start(i);
-            while (routing.IsEnd(index) == false)
-            {
-                var timeVar = timeDimension.CumulVar(index);
-                Console.Write("{0} Time({1},{2}) -> ",
-                    manager.IndexToNode(index),
-                    solution.Min(timeVar),
-                    solution.Max(timeVar));
-                index = solution.Value(routing.NextVar(index));
-            }
-            var endTimeVar = timeDimension.CumulVar(index);
-            Console.WriteLine("{0} Time({1},{2})",
-                manager.IndexToNode(index),
-                solution.Min(endTimeVar),
-                solution.Max(endTimeVar));
-            Console.WriteLine("Time of the route: {0}min", solution.Min(endTimeVar));
-            totalTime += solution.Min(endTimeVar);
+            currentAddress = addresses[manager.IndexToNode(index)];
+            bestRoute.Add(currentAddress);
+            index = solution.Value(routing.NextVar(index));
         }
-        Console.WriteLine("Total time of all routes: {0}min", totalTime);
+
+        currentAddress = addresses[manager.IndexToNode(index)];
+        bestRoute.Add(currentAddress);
+        return bestRoute;
     }
    
        
     public List<string> route(List<string> addresses)
     {
-        addresses = new List<string>
-        {
-                       "3610+Hacks+Cross+Rd+Memphis+TN", // depot
-                       "1921+Elvis+Presley+Blvd+Memphis+TN",
-                       "149+Union+Avenue+Memphis+TN",
-                       "1034+Audubon+Drive+Memphis+TN",
-                       "1532+Madison+Ave+Memphis+TN",
-                       "706+Union+Ave+Memphis+TN",
-                       "3641+Central+Ave+Memphis+TN",
-                       "926+E+McLemore+Ave+Memphis+TN",
-                       "4339+Park+Ave+Memphis+TN",
-                       "600+Goodwyn+St+Memphis+TN",
-                       "2000+North+Pkwy+Memphis+TN",
-                       "262+Danny+Thomas+Pl+Memphis+TN",
-                       "125+N+Front+St+Memphis+TN",
-                       "5959+Park+Ave+Memphis+TN",
-                       "814+Scott+St+Memphis+TN",
-                       "1005+Tillman+St+Memphis+TN"
-        };
-
         string apiKey = "AIzaSyBtSc0dRb4m4S6TBfnft52euaAr0qQt1Ls"; //TODO make env variable
         
         
@@ -144,16 +108,17 @@ public class RouteOptimization
         // Define cost of each arc.
         routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
-        // Add Distance constraint.
+        // Add "Time" constraint.
         routing.AddDimension(
             transitCallbackIndex, // transit callback
             30, // allow waiting time
-            30, // vehicle maximum capacities
+            999999, // vehicle maximum capacities
             false,  // start cumul to zero
             "Time");
         RoutingDimension timeDimension = routing.GetMutableDimension("Time");
+        
         // Add time window constraints for each location except depot.
-        for (int i = 1; i < data.TimeWindows.GetLength(0); ++i)
+/*        for (int i = 1; i < data.TimeWindows.GetLength(0); ++i)
         {
             long index = manager.NodeToIndex(i);
             timeDimension.CumulVar(index).SetRange(
@@ -167,7 +132,8 @@ public class RouteOptimization
             timeDimension.CumulVar(index).SetRange(
                 data.TimeWindows[0, 0],
                 data.TimeWindows[0, 1]);
-        }
+        }*/
+
 
         // Instantiate route start and end times to produce feasible times.
         for (int i = 0; i < data.VehicleNumber; ++i)
@@ -186,10 +152,14 @@ public class RouteOptimization
 
         // Solve the problem.
         Assignment solution = routing.SolveWithParameters(searchParameters);
-
+        if(solution == null)
+        {
+            return new List<string>();
+        }
+        
         // Print solution on console.
-        PrintSolution(data, routing, manager, solution);
-        return addresses;
+        return GetSolution(data, routing, manager, solution, addresses);
+
     }
 
     public long[,] create_time_matrix(List<string> addresses, string API_key)
@@ -230,7 +200,16 @@ public class RouteOptimization
     public void test(List<string> addresses)
     {
         long[,] test_duration_matrix = create_time_matrix(addresses, APIKey);
-        Debug.WriteLine(test_duration_matrix);
+        Debug.Write("[ ");
+        for (int i = 0; i < test_duration_matrix.GetLength(0); i++)
+        {
+            for (int j=  0; j < test_duration_matrix.GetLength(1); j++)
+            {
+                Debug.Write(" " + test_duration_matrix[i,j].ToString() + ",");
+            }
+            Debug.Write("\r\n");
+        }
+        Debug.Write("]");
     }
     /*
 
