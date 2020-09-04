@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.Diagnostics;
 
 /// <summary>
 ///   Vehicles Routing Problem (VRP) with Time Windows.
@@ -211,10 +212,25 @@ public class RouteOptimization
             List<string> origin_addresses = addresses.GetRange(i * max_rows, (i + 1) * max_rows - i * max_rows);
             string response = send_request(origin_addresses, dest_addresses, API_key);
 
-            duration_matrix.append(build_duration_matrix(response, num_addresses, max_rows);
+            build_duration_matrix(response, i * max_rows, ref duration_matrix);
 
         }
+
+        // Get the remaining remaining r rows, if necessary.
+        if (r > 0)
+        {
+            List<string> origin_addresses = addresses.GetRange(q * max_rows, ((q * max_rows)+r) - q * max_rows);
+            string response = send_request(origin_addresses, dest_addresses, API_key);
+            build_duration_matrix(response, q * max_rows, ref duration_matrix);
+        }
+
         return duration_matrix;
+    }
+
+    public void test(List<string> addresses)
+    {
+        long[,] test_duration_matrix = create_time_matrix(addresses, APIKey);
+        Debug.WriteLine(test_duration_matrix);
     }
     /*
 
@@ -225,26 +241,25 @@ public class RouteOptimization
         distance_matrix.append(row_list)
         return distance_matrix
         */
-      private long[,] build_duration_matrix(string response, int num_addresses, int rows)
+      private void build_duration_matrix(string response, int currentRow, ref long[,] duration_matrix)
       {
         
         JsonDocument json = JsonDocument.Parse(response);
         var root = json.RootElement;
 
-        long[,] durationMatrix = new long[num_addresses, rows];
-        int i = 0;
+        //long[,] durationMatrix = new long[num_addresses, rows];
+        int i = currentRow;
         foreach(JsonElement row in root.GetProperty("rows").EnumerateArray())
         {
             int j = 0;
             foreach(JsonElement element in row.GetProperty("elements").EnumerateArray())
             {
-                durationMatrix[i, j] = element.GetProperty("duration").GetProperty("value").GetInt32();
+                duration_matrix[i, j] = element.GetProperty("duration").GetProperty("value").GetInt32();
 
                     j++;
             }
             i++;
         }
-        return durationMatrix;
     }
 
 

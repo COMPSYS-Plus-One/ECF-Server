@@ -48,8 +48,8 @@ namespace ECF_Server.Controllers
         public List<string> Post([FromBody] AddressList addressList)
         {
             RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
-            List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
-
+            //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
+            routeOptimization.test(addressList.addresses);
             return addressList.addresses;
         }
 
