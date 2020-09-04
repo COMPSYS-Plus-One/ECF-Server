@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ECF_Server</RootNamespace>
+    <UserSecretsId>20d15a14-499d-4ae2-b150-70bf6df45e16</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
