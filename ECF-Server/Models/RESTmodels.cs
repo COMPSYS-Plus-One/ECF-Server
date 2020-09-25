@@ -72,7 +72,7 @@ namespace ECF_Server
         public List<Tax> taxes;
         public List<MetaData2> meta_data;
         public string sku;
-        public int price;
+        public float price;
     }
 
     public class TaxLine

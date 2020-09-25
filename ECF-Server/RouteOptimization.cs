@@ -193,7 +193,6 @@ public class RouteOptimization
             string response = send_request(origin_addresses, dest_addresses, API_key);
             build_duration_matrix(response, q * max_rows, ref duration_matrix);
         }
-
         return duration_matrix;
     }
 
