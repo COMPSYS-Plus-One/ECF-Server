@@ -51,18 +51,8 @@ namespace ECF_Server.Controllers
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
             return routeOptimization.route(addressList.addresses);
         }
-        [Route("orders")]
-        [HttpGet]
-        public List<string> getCurrentOrders()
-        {
-            List<string> orderList = new List<string>();
-            foreach(var order in getCurrentOrdersList())
-            {
-                Debug.WriteLine("Order Status: {0}", order.id);
-                orderList.Add(JsonSerializer.Serialize(order));
-            }
-            return orderList;
-        }
+
+
         // PUT api/<RouteController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
@@ -75,13 +65,90 @@ namespace ECF_Server.Controllers
         {
         }
 
-        private List<RootOrder> getCurrentOrdersList()
+
+        
+        [Route("orders")]
+        [HttpGet]
+        public List<List<RootOrder>> GetCurrentOrdersRoute()
         {
+            List<List<string>> areaGroups = new List<List<string>>()
+            {
+                new List<string>()
+                {
+                    "0630"
+                },
+                new List<string>()
+                {
+                    "0632"
+                }
+            };
             var restConsumer = new RESTconsumer();
-            List<RootOrder> orderList = restConsumer.apiRequestOrderList("GET", "orders");
-            List<RootOrder> currentOrderList = orderList.Where(x => x.status == "Processing").ToList();
+            var currentOrderList = restConsumer.apiRequestOrderList("GET", "orders").Where(x => x.status == "processing").ToList();
+            //Sort orders by area HERE into a nested list of orders, then run this in a loop
+            //Create a list of orders for each List of areas, plus an additional one for any non-conforming areas
+            var ordersByArea = new List<List<RootOrder>>();
+           
+            for(int i = 0; i <= areaGroups.Count(); i++)
+            {
+                ordersByArea.Add(new List<RootOrder>());
+            }
+            //Go through each order and check the if the postcode is in each list, if so, copy it to correct list, else put it in spare list
+           
+
+            foreach (var order in currentOrderList){                
+                bool isInArea = false;
+
+                for(int i = 0; i < areaGroups.Count(); i++)
+                {
+                    if (areaGroups[i].Contains(order.shipping.postcode))
+                    {
+                        ordersByArea[i].Add(order);
+                        isInArea = true;
+                        break;
+                    }
+                }
+                if (!isInArea)
+                {
+                    ordersByArea.Last().Add(order);
+                }
+                
+                
+            }
             
-            return orderList;
+            //Replce this with DEPOT Adress, should probavbly be stored in config, or provided via the API call
+            string depotAddress = "1 Grafton Road, Auckland CBD, Auckland 1010";
+
+            //Then loop through this list of orders, performing the route optimisation for each one.
+            //Will need to add the depot location (ie ellis creek farms - we should put this values somewehere nice)
+
+            //Structure to store order in
+            var optimisedOrdersList = new List<List<RootOrder>>();
+            foreach (var orderList in ordersByArea)
+            {
+                if(orderList.Count == 0)
+                {
+                    break;
+                }
+                List<string> addressList = new List<string>();
+                addressList.Add(depotAddress);
+                //Add each of the orders full address to the  list
+                addressList.AddRange(orderList.Select(x => x.shipping.fullAddress).ToList());
+                
+                //Also need to add the depot location here
+                RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
+                List<string> optimisedRoute = routeOptimization.route(addressList);
+                foreach (string a in optimisedRoute)
+                {
+                    Console.WriteLine(a);
+                }
+                var optimisedOrders = orderList.OrderBy(x => optimisedRoute.IndexOf(x.shipping.fullAddress)).ToList();
+                optimisedOrdersList.Add(optimisedOrders);
+            }
+
+
+            return optimisedOrdersList;
         }
+
+       
     }
 }
