@@ -68,20 +68,10 @@ namespace ECF_Server.Controllers
 
         
         [Route("orders")]
-        [HttpGet]
-        public List<List<RootOrder>> GetCurrentOrdersRoute()
+        [HttpPost]
+        public List<DeliveryRoute> GetCurrentOrdersRoute([FromBody] DeliveryAreas deliveryAreas)
         {
-            List<List<string>> areaGroups = new List<List<string>>()
-            {
-                new List<string>()
-                {
-                    "0630"
-                },
-                new List<string>()
-                {
-                    "0632"
-                }
-            };
+            var areaGroups = deliveryAreas.deliveryAreas.Select(x => x.postcodes).ToList();
             var restConsumer = new RESTconsumer();
             var currentOrderList = restConsumer.apiRequestOrderList("GET", "orders").Where(x => x.status == "processing").ToList();
             //Sort orders by area HERE into a nested list of orders, then run this in a loop
@@ -122,13 +112,31 @@ namespace ECF_Server.Controllers
             //Will need to add the depot location (ie ellis creek farms - we should put this values somewehere nice)
 
             //Structure to store order in
-            var optimisedOrdersList = new List<List<RootOrder>>();
+            int index = 0;
+            var deliveryRoutes = new List<DeliveryRoute>();
             foreach (var orderList in ordersByArea)
             {
+                string name;
+                //Get the name of the delivery area
+                if(index < deliveryAreas.deliveryAreas.Count())
+                {
+                    name = deliveryAreas.deliveryAreas[index].name;
+                }
+                else
+                {
+                    name = "Other";
+                }
+                index++;
+
+                //If the list of orders for an area is emtpy, skip the area
                 if(orderList.Count == 0)
                 {
-                    break;
+                    continue;
                 }
+
+                var deliveryRoute = new DeliveryRoute();
+                deliveryRoute.name = name;
+
                 List<string> addressList = new List<string>();
                 addressList.Add(depotAddress);
                 //Add each of the orders full address to the  list
@@ -142,11 +150,14 @@ namespace ECF_Server.Controllers
                     Console.WriteLine(a);
                 }
                 var optimisedOrders = orderList.OrderBy(x => optimisedRoute.IndexOf(x.shipping.fullAddress)).ToList();
-                optimisedOrdersList.Add(optimisedOrders);
+                deliveryRoute.orders = optimisedOrders;
+                deliveryRoute.optimisedRoute = optimisedRoute;
+
+                deliveryRoutes.Add(deliveryRoute);
             }
 
 
-            return optimisedOrdersList;
+            return deliveryRoutes;
         }
 
        

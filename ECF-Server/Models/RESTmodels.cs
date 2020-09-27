@@ -28,7 +28,7 @@ namespace ECF_Server
         public string fullAddress {
             get
             {
-                return this.address_1 + " " + this.address_2 + " " + this.city + " " + this.state + " " + this.postcode + " " + this.country;
+                return this.address_1 + " " + this.address_2 + " " + this.city + " " + this.postcode + " " + this.country;
             }
         }
         public string first_name { get; set; }
