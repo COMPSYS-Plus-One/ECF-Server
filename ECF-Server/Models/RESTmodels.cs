@@ -10,161 +10,167 @@ namespace ECF_Server
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Billing
     {
-        public string first_name;
-        public string last_name;
-        public string company;
-        public string address_1;
-        public string address_2;
-        public string city;
-        public string state;
-        public string postcode;
-        public string country;
-        public string email;
-        public string phone;
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string company { get; set; }
+        public string address_1 { get; set; }
+        public string address_2 { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string postcode { get; set; }
+        public string country { get; set; }
+        public string email { get; set; }
+        public string phone { get; set; }
     }
 
     public class Shipping
     {
-        public string first_name;
-        public string last_name;
-        public string company;
-        public string address_1;
-        public string address_2;
-        public string city;
-        public string state;
-        public string postcode;
-        public string country;
+        public string fullAddress {
+            get
+            {
+                return this.address_1 + " " + this.address_2 + " " + this.city + " " + this.postcode + " " + this.country;
+            }
+        }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string company { get; set; }
+        public string address_1 { get; set; }
+        public string address_2 { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string postcode { get; set; }
+        public string country { get; set; }
     }
 
     public class MetaData
     {
-        public int id;
-        public string key;
-        public string value;
+        public int id { get; set; }
+        public string key { get; set; }
+        public string value { get; set; }
     }
 
     public class Tax
     {
-        public int id;
-        public string total;
-        public string subtotal;
+        public int id { get; set; }
+        public string total { get; set; }
+        public string subtotal { get; set; }
     }
 
     public class MetaData2
     {
-        public int id;
-        public string key;
-        public string value;
+        public int id { get; set; }
+        public string key { get; set; }
+        public string value { get; set; }
     }
 
     public class LineItem
     {
-        public int id;
-        public string name;
-        public int product_id;
-        public int variation_id;
-        public int quantity;
-        public string tax_class;
-        public string subtotal;
-        public string subtotal_tax;
-        public string total;
-        public string total_tax;
-        public List<Tax> taxes;
-        public List<MetaData2> meta_data;
-        public string sku;
-        public int price;
+        public int id { get; set; }
+        public string name { get; set; }
+        public int product_id { get; set; }
+        public int variation_id { get; set; }
+        public int quantity { get; set; }
+        public string tax_class { get; set; }
+        public string subtotal { get; set; }
+        public string subtotal_tax { get; set; }
+        public string total { get; set; }
+        public string total_tax { get; set; }
+        public List<Tax> taxes { get; set; }
+        public List<MetaData2> meta_data { get; set; }
+        public string sku { get; set; }
+        public float price { get; set; }
     }
 
     public class TaxLine
     {
-        public int id;
-        public string rate_code;
-        public int rate_id;
-        public string label;
-        public bool compound;
-        public string tax_total;
-        public string shipping_tax_total;
-        public List<object> meta_data;
+        public int id { get; set; }
+        public string rate_code { get; set; }
+        public int rate_id { get; set; }
+        public string label { get; set; }
+        public bool compound { get; set; }
+        public string tax_total { get; set; }
+        public string shipping_tax_total { get; set; }
+        public List<object> meta_data { get; set; }
     }
 
     public class ShippingLine
     {
-        public int id;
-        public string method_title;
-        public string method_id;
-        public string total;
-        public string total_tax;
-        public List<object> taxes;
-        public List<object> meta_data;
+        public int id { get; set; }
+        public string method_title { get; set; }
+        public string method_id { get; set; }
+        public string total { get; set; }
+        public string total_tax { get; set; }
+        public List<object> taxes { get; set; }
+        public List<object> meta_data { get; set; }
     }
 
     public class Self
     {
-        public string href;
+        public string href { get; set; }
     }
 
     public class Collection
     {
-        public string href;
+        public string href { get; set; }
     }
 
     public class Links
     {
-        public List<Self> self;
-        public List<Collection> collection;
+        public List<Self> self { get; set; }
+        public List<Collection> collection { get; set; }
     }
 
     public class Refund
     {
-        public int id;
-        public string refund;
-        public string total;
+        public int id { get; set; }
+        public string refund { get; set; }
+        public string total { get; set; }
     }
     
 
     //--------order model class--------------------------------------------------------------
     public class RootOrder
     {
-        public int id;
-        public int parent_id;
-        public string number;
-        public string order_key;
-        public string created_via;
-        public string version;
-        public string status;
-        public string currency;
+        public int id { get; set; }
+        public int parent_id { get; set; }
+        public string number { get; set; }
+        public string order_key { get; set; }
+        public string created_via { get; set; }
+        public string version { get; set; }
+        public string status { get; set; }
+        public string currency { get; set; }
         //public DateTime date_created;
         //public DateTime date_created_gmt;
         //public DateTime date_modified;
         //public DateTime date_modified_gmt;
-        public string discount_total;
-        public string discount_tax;
-        public string shipping_total;
-        public string shipping_tax;
-        public string cart_tax;
-        public string total;
-        public string total_tax;
-        public bool prices_include_tax;
-        public int customer_id;
-        public string customer_ip_address;
-        public string customer_user_agent;
-        public string customer_note;
-        public Billing billing;
-        public Shipping shipping;
-        public string payment_method;
-        public string payment_method_title;
-        public string transaction_id;
-        public object date_completed;
-        public object date_completed_gmt;
-        public string cart_hash;
-        public List<MetaData> meta_data;
-        public List<LineItem> line_items;
-        public List<TaxLine> tax_lines;
-        public List<ShippingLine> shipping_lines;
-        public List<object> fee_lines;
-        public List<object> coupon_lines;
-        public List<object> refunds;
-        public Links _links;
+        public string discount_total { get; set; }
+        public string discount_tax { get; set; }
+        public string shipping_total { get; set; }
+        public string shipping_tax { get; set; }
+        public string cart_tax { get; set; }
+        public string total { get; set; }
+        public string total_tax { get; set; }
+        public bool prices_include_tax { get; set; }
+        public int customer_id { get; set; }
+        public string customer_ip_address { get; set; }
+        public string customer_user_agent { get; set; }
+        public string customer_note { get; set; }
+        public Billing billing { get; set; }
+        public Shipping shipping { get; set; }
+        public string payment_method { get; set; }
+        public string payment_method_title { get; set; }
+        public string transaction_id { get; set; }
+        public object date_completed { get; set; }
+        public object date_completed_gmt { get; set; }
+        public string cart_hash { get; set; }
+        public List<MetaData> meta_data { get; set; }
+        public List<LineItem> line_items { get; set; }
+        public List<TaxLine> tax_lines { get; set; }
+        public List<ShippingLine> shipping_lines { get; set; }
+        public List<object> fee_lines { get; set; }
+        public List<object> coupon_lines { get; set; }
+        public List<object> refunds { get; set; }
+        public Links _links { get; set; }
 
         public string serializeOrder()
         {
