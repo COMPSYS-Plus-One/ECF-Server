@@ -179,8 +179,12 @@ namespace ECF_Server
                 customer_id = this.customer_id,
                 total = this.total,
                 status = this.status,
-                line_items = this.line_items
-                
+                line_items = this.line_items,
+                firstName = this.shipping.first_name,
+                lastName = this.shipping.last_name,
+                address = this.shipping.address_1 + " " + this.shipping.address_2 + " " + this.shipping.city + " " + this.shipping.state + " " + this.shipping.postcode + " " + this.shipping.country,
+                phone = this.billing.phone
+
             };
             return JsonConvert.SerializeObject(O);
         }
@@ -192,6 +196,10 @@ namespace ECF_Server
         public int customer_id;
         public string total;
         public string status;
+        public string firstName;
+        public string lastName;
+        public string address;
+        public string phone;
         public List<LineItem> line_items;
     }
 
