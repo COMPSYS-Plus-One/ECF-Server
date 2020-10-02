@@ -26,8 +26,8 @@ public class RouteOptimization
         public long[,] TimeWindows = {
                 {0, 9999999999999},    // depot
                 {0, 9999999999999},   // 1
-                {0, 999999999999},  // 2
-                {0, 999999999999},  // 3
+                {0, 2},  // 2
+                {0, 9999999999999},  // 3
                 {0, 999999999999}  // 4
 
               };
@@ -115,10 +115,11 @@ public class RouteOptimization
             999999, // vehicle maximum capacities
             false,  // start cumul to zero
             "Time");
+
         RoutingDimension timeDimension = routing.GetMutableDimension("Time");
         
-        // Add time window constraints for each location except depot.
-/*        for (int i = 1; i < data.TimeWindows.GetLength(0); ++i)
+        //Add time window constraints for each location except depot.
+        for (int i = 1; i < data.TimeWindows.GetLength(0); ++i)
         {
             long index = manager.NodeToIndex(i);
             timeDimension.CumulVar(index).SetRange(
@@ -132,7 +133,7 @@ public class RouteOptimization
             timeDimension.CumulVar(index).SetRange(
                 data.TimeWindows[0, 0],
                 data.TimeWindows[0, 1]);
-        }*/
+        }
 
 
         // Instantiate route start and end times to produce feasible times.
