@@ -19,7 +19,7 @@ namespace ECF_Server.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "tes", "test" };
+            return new string[] { "tes" };
         }
 
         // GET api/data/get_order/5
@@ -59,10 +59,43 @@ namespace ECF_Server.Controllers
             }
         }
 
-        // POST api/data
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // PUT api/data/confirm_order/5
+        [HttpPut("confirm_order/{id}")]
+        public string ConfirmOrder(int id)
         {
+            try
+            {
+                var order = RestCon.apiUpdateOrder("PUT", "orders/" + id.ToString() );
+                return order.serializeOrder();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
+        }
+
+        // POST api/data/create_note/5
+        // pass the order id and the json format message as the body
+        [HttpPost("create_note/{id}")]
+        public string CreateOrderNote([FromBody] string note, int id)
+        {
+            try
+            {
+                var orderNote = RestCon.apiCreateOrderNote("POST", "orders/" + id.ToString() + "/notes", note);
+                return orderNote.serializeOrderNote();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
         }
 
         // PUT api/data/5
