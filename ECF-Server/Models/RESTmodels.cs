@@ -139,6 +139,7 @@ namespace ECF_Server
         public string version { get; set; }
         public string status { get; set; }
         public string currency { get; set; }
+        
         //public DateTime date_created;
         //public DateTime date_created_gmt;
         //public DateTime date_modified;
@@ -185,6 +186,7 @@ namespace ECF_Server
                 address = this.shipping.address_1 + " " + this.shipping.address_2 + " " + this.shipping.city + " " + this.shipping.state + " " + this.shipping.postcode + " " + this.shipping.country,
                 phone = this.billing.phone,
                 customerNote = this.customer_note,
+                date_completed = this.date_completed
             };
             return JsonConvert.SerializeObject(O);
         }
@@ -201,6 +203,7 @@ namespace ECF_Server
         public string address;
         public string phone;
         public string customerNote;
+        public object date_completed;
         public List<LineItem> line_items;
     }
 
@@ -245,5 +248,44 @@ namespace ECF_Server
         public string name;
         public string address;
         public string phone;
+    }
+
+    //--------order note model class-----------------------------------------------------------
+    public class RootOrderNote
+    {
+        public int id { get; set; }
+        public string author { get; set; }
+        public DateTime date_created;
+        public DateTime date_created_gmt;
+        public string note { get; set; }
+        public bool customer_note { get; set; }
+        public bool added_by_user { get; set; }
+
+        public string serializeOrderNote()
+        {
+            APIOrderNote O = new APIOrderNote
+            {
+                note_id = this.id,
+                author = this.author,
+                date_created = this.date_created,
+                date_created_gmt = this.date_created_gmt,
+                note = this.note,
+                customer_note = this.customer_note,
+
+            };
+            return JsonConvert.SerializeObject(O);
+        }
+    }
+
+    public class APIOrderNote
+    {
+        //This class is for easy formatting for the API response
+        public string response = "ok";
+        public int note_id;
+        public string author;
+        public DateTime date_created;
+        public DateTime date_created_gmt;
+        public string note;
+        public bool customer_note;
     }
 }
