@@ -145,10 +145,10 @@ namespace ECF_Server.Controllers
                 //Also need to add the depot location here
                 RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
                 List<string> optimisedRoute = routeOptimization.route(addressList);
-                foreach (string a in optimisedRoute)
+                /*foreach (string a in optimisedRoute)
                 {
                     Console.WriteLine(a);
-                }
+                }*/
                 var optimisedOrders = orderList.OrderBy(x => optimisedRoute.IndexOf(x.shipping.fullAddress)).ToList();
                 deliveryRoute.orders = optimisedOrders;
                 deliveryRoute.optimisedRoute = optimisedRoute;

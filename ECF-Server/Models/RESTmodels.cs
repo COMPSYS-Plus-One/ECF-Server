@@ -183,8 +183,8 @@ namespace ECF_Server
                 firstName = this.shipping.first_name,
                 lastName = this.shipping.last_name,
                 address = this.shipping.address_1 + " " + this.shipping.address_2 + " " + this.shipping.city + " " + this.shipping.state + " " + this.shipping.postcode + " " + this.shipping.country,
-                phone = this.billing.phone
-
+                phone = this.billing.phone,
+                customerNote = this.customer_note,
             };
             return JsonConvert.SerializeObject(O);
         }
@@ -200,6 +200,7 @@ namespace ECF_Server
         public string lastName;
         public string address;
         public string phone;
+        public string customerNote;
         public List<LineItem> line_items;
     }
 
