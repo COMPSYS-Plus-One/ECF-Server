@@ -59,6 +59,26 @@ namespace ECF_Server.Controllers
             }
         }
 
+        // GET api/data/get_order_note/5/5
+        // get all the order notes by its order id
+        [HttpGet("get_order_note/{order_id}/{note_id}")]
+        public string GetOrderNotes( int order_id, int note_id)
+        {
+            try
+            {
+                var orderNote = RestCon.apiGetOrderNote("GET", "orders/" + order_id.ToString() + "/notes/" + note_id.ToString());
+                return orderNote.serializeOrderNote();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
+        }
+
         // PUT api/data/confirm_order/5
         [HttpPut("confirm_order/{id}")]
         public string ConfirmOrder(int id)

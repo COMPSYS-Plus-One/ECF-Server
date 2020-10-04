@@ -172,5 +172,19 @@ namespace ECF_Server
             //Console.WriteLine(response.Content);
             return JsonConvert.DeserializeObject<RootOrderNote>(response.Content);
         }
+
+        public RootOrderNote apiGetOrderNote(string HTTPMethod, string requestURL)
+        {
+            // This method is used for the orders/{id} API call that returns the order data
+            // HTTPMethod - The HTTP request method. e.g GET, POST, etc.
+            // requestURL - The extension to be added to the base url. Where the base url is: https://epic.elliscreekfarm.co.nz/wp-json/wc/v3/  
+            // note - The note added to the order
+
+            var BASE_URL = new Uri(mainURL + requestURL);
+            IRestResponse response = sendRequest(HTTPMethod, BASE_URL);
+
+            //Console.WriteLine(response.Content);
+            return JsonConvert.DeserializeObject<RootOrderNote>(response.Content);
+        }
     }
 }
