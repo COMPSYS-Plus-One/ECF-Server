@@ -17,6 +17,7 @@ namespace ECF_Server.Models
     public class DeliveryRoute
     {
         public string name { get; set; }
+        public List<int> orderNumbers { get; set; }
         public List<string> optimisedRoute { get; set; }
         public List<RootOrder> orders { get; set; }
     }
