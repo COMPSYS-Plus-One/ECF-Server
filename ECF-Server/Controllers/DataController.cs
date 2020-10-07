@@ -129,6 +129,68 @@ namespace ECF_Server.Controllers
         public void Delete(int id)
         {
         }
+
+        // PUT api/data/set_delivery_time_window_earliest/5
+        [HttpPut("set_delivery_time_window_earliest/{id}")]
+        public string CreateDriverTimeEarliest([FromBody] string timeConstraint, int id)
+        {
+            Console.WriteLine("time sent:" + timeConstraint);
+            try
+            {
+                var delieveryWindow = RestCon.apiSetDelieveryWindowEarliest("PUT", "orders/" + id.ToString() + "/ecf_schedule_time_earliest", timeConstraint);
+                return delieveryWindow.serializeOrderNote();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
+        }
+
+        // PUT api/data/set_delivery_time_window_latest/5
+        [HttpPut("set_delivery_time_window_latest/{id}")]
+        public string CreateDriverTimeLatest([FromBody] string timeConstraint, int id)
+        {
+            Console.WriteLine("time sent:" + timeConstraint);
+            try
+            {
+                var delieveryWindow = RestCon.apiSetDelieveryWindowLatest("PUT", "orders/" + id.ToString() + "/ecf_schedule_time_earliest", timeConstraint);
+                return delieveryWindow.serializeOrderNote();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
+        }
+
+        // GET api/data/get_delivery_time_window_earliest/5
+        // pass the order id and the json format message as the body
+        [HttpPost("get_delivery_time_window_earliest/{id}")]
+        public string GetDriverTimeWindow([FromBody] int id)
+        {
+            try
+            {
+                var orderNote = RestCon.apiGetDelieveryWindowEarliest("POST", "orders/" + id.ToString() + "/ecf_schedule_time_earliest");
+                return orderNote.serializeOrderNote();
+            }
+            catch
+            {
+                ErrorResponse E = new ErrorResponse
+                {
+                    messgae = "ID does not match an order"
+                };
+                return JsonConvert.SerializeObject(E);
+            }
+        }
+
+
     }
 
     public class ErrorResponse
