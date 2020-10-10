@@ -45,11 +45,11 @@ namespace ECF_Server.Controllers
 
         // POST api/<RouteController>
         [HttpPost]
-        public List<string> Post([FromBody] AddressList addressList)
+        public List<string> Post([FromBody] AddressList addressList, long[,] timeWindows)
         {
             RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
-            return routeOptimization.route(addressList.addresses);
+            return routeOptimization.route(addressList.addresses, timeWindows);
         }
 
 
@@ -144,11 +144,20 @@ namespace ECF_Server.Controllers
                 
                 //Also need to add the depot location here
                 RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
-                List<string> optimisedRoute = routeOptimization.route(addressList);
-                /*foreach (string a in optimisedRoute)
+
+                long[,] timeWindows = {     //TODO: get these values from orders
+                    {0, 9999999999999},    // depot
+                    {0, 9999999999999},   // 1
+                    {0, 2},  // 2
+                    {0, 9999999999999},  // 3
+                    {0, 999999999999}  // 4
+                };
+
+                List<string> optimisedRoute = routeOptimization.route(addressList, timeWindows);
+                foreach (string a in optimisedRoute)
                 {
                     Console.WriteLine(a);
-                }*/
+                }
                 var optimisedOrders = orderList.OrderBy(x => optimisedRoute.IndexOf(x.shipping.fullAddress)).ToList();
                 deliveryRoute.orders = optimisedOrders;
                 deliveryRoute.optimisedRoute = optimisedRoute;
