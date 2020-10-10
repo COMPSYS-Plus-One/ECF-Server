@@ -23,14 +23,8 @@ public class RouteOptimization
     {
         public long[,] TimeMatrix;
 
-        public long[,] TimeWindows = {
-                {0, 9999999999999},    // depot
-                {0, 9999999999999},   // 1
-                {0, 2},  // 2
-                {0, 9999999999999},  // 3
-                {0, 999999999999}  // 4
+        public long[,] TimeWindows;
 
-              };
         public int VehicleNumber = 1;
 
         public int Depot = 0;
@@ -38,6 +32,11 @@ public class RouteOptimization
         public void setTimeMatrix(long[,] newTimeMatrix)
         {
             TimeMatrix = newTimeMatrix;
+        }
+
+        public void setTimeWindows(long[,] newTimeWindows)
+        {
+            TimeWindows = newTimeWindows;
         }
     };
 
@@ -76,7 +75,7 @@ public class RouteOptimization
     }
    
        
-    public List<string> route(List<string> addresses)
+    public List<string> route(List<string> addresses, long[,] timeWindows)
     {
         string apiKey = "AIzaSyBtSc0dRb4m4S6TBfnft52euaAr0qQt1Ls"; //TODO make env variable
         
@@ -85,6 +84,7 @@ public class RouteOptimization
         DataModel data = new DataModel(); //TODO pass addresses and apiKey into dataModel instance
 
         data.setTimeMatrix(create_time_matrix(addresses, apiKey));
+        data.setTimeWindows(timeWindows);
 
         // Create Routing Index Manager
         RoutingIndexManager manager = new RoutingIndexManager(
