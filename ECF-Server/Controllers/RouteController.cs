@@ -45,11 +45,11 @@ namespace ECF_Server.Controllers
 
         // POST api/<RouteController>
         [HttpPost]
-        public List<string> Post([FromBody] AddressList addressList)
+        public List<string> Post([FromBody] AddressList addressList, long[,] timeWindows)
         {
             RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
-            return routeOptimization.route(addressList.addresses);
+            return routeOptimization.route(addressList.addresses, timeWindows);
         }
 
 
