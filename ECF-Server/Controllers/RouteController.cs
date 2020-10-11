@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Net.Http;
 using ECF_Server.Models;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,12 +18,13 @@ namespace ECF_Server.Controllers
     [ApiController]
     public class RouteController : ControllerBase
     {
+        private IConfiguration configuration;
 
         private readonly IHttpClientFactory _httpClientFactory;
-        public RouteController(IHttpClientFactory httpClientFactory)
+        public RouteController(IHttpClientFactory httpClientFactory, IConfiguration iConfig)
         {
             _httpClientFactory = httpClientFactory;
-            
+            configuration = iConfig;
         }
 
 
@@ -32,6 +34,7 @@ namespace ECF_Server.Controllers
         {
             
             return new string[] { "value1", "value2" };
+            
             
             
         }
@@ -47,7 +50,9 @@ namespace ECF_Server.Controllers
         [HttpPost]
         public List<string> Post([FromBody] RouteModel routeModel)
         {
-            RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
+            string googleApiKey = configuration.GetValue<string>("GoogleAPIKey");
+
+            RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient(), googleApiKey);
 
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
             return routeOptimization.route(routeModel.addressList.addresses, routeModel.timeWindows);
@@ -105,9 +110,10 @@ namespace ECF_Server.Controllers
                 
                 
             }
-            
+
             //Replce this with DEPOT Adress, should probavbly be stored in config, or provided via the API call
-            string depotAddress = "1 Grafton Road, Auckland CBD, Auckland 1010";
+
+            string depotAddress = configuration.GetValue<string>("Routing:DepotAddress");
 
             //Then loop through this list of orders, performing the route optimisation for each one.
             //Will need to add the depot location (ie ellis creek farms - we should put this values somewehere nice)
@@ -142,9 +148,10 @@ namespace ECF_Server.Controllers
                 addressList.Add(depotAddress);
                 //Add each of the orders full address to the  list
                 addressList.AddRange(orderList.Select(x => x.shipping.fullAddress).ToList());
-                
+
                 //Also need to add the depot location here
-                RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
+                string googleApiKey = configuration.GetValue<string>("GoogleAPIKey");
+                RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient(), googleApiKey);
 
                 long[,] timeWindows = new long[addressList.Count(),2];
                 for(int i = 0; i < addressList.Count(); i++)

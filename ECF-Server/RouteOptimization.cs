@@ -17,7 +17,7 @@ using System.Timers;
 public class RouteOptimization  
 {
     //Delete this later - for teting only
-    private string APIKey = "AIzaSyBtSc0dRb4m4S6TBfnft52euaAr0qQt1Ls";
+    private string APIKey;
     private HttpClient _httpClient;
     class DataModel
     {
@@ -40,9 +40,10 @@ public class RouteOptimization
         }
     };
 
-    public RouteOptimization(HttpClient httpClient)
+    public RouteOptimization(HttpClient httpClient, string apikey)
     {
         _httpClient = httpClient;
+        APIKey = apikey;
     }
 
     /// <summary>
@@ -77,13 +78,13 @@ public class RouteOptimization
        
     public List<string> route(List<string> addresses, long[,] timeWindows)
     {
-        string apiKey = "AIzaSyBtSc0dRb4m4S6TBfnft52euaAr0qQt1Ls"; //TODO make env variable
+
         
         
         // Instantiate the data problem.
         DataModel data = new DataModel(); //TODO pass addresses and apiKey into dataModel instance
 
-        data.setTimeMatrix(create_time_matrix(addresses, apiKey));
+        data.setTimeMatrix(create_time_matrix(addresses, APIKey));
         data.setTimeWindows(timeWindows);
 
         // Create Routing Index Manager
