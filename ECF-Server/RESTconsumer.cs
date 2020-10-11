@@ -4,20 +4,26 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Web;
-
+using Microsoft.Extensions.Configuration;
 namespace ECF_Server
 {
     public class RESTconsumer
     {
-        private static string consumerKey = "pY4pDjtTksw8";
-        private static string consumerSecret = "sDx7VxCNWxvJNOoKP4kf4L1kBSiKXOv0GDeZx9zYqkkyTo3s";
-        private static string oauthToken = "TxE5rFEcrzsfEXqQyse691fd";
-        private static string oauthTokenSecret = "ZFBNqeUHkYNmL5w94CdrtjwUa3ewMvDMPDUamgCpKYIQ5PJd";
-        private static string mainURL = "https://epic.elliscreekfarm.co.nz/wp-json/wc/v3/";
+        private static string consumerKey;
+        private static string consumerSecret;
+        private static string oauthToken;
+        private static string oauthTokenSecret;
+        private static string mainURL;
 
-        public RESTconsumer()
+        private IConfiguration configuration;
+        public RESTconsumer(IConfiguration iConfig)
         {
-
+            configuration = iConfig;
+            consumerKey = configuration.GetValue<string>("WooCommerce:consumerKey");
+            consumerSecret = configuration.GetValue<string>("WooCommerce:consumerSecret");
+            oauthToken = configuration.GetValue<string>("WooCommerce:oauthToken");
+            oauthTokenSecret = configuration.GetValue<string>("WooCommerce:oauthTokenSecret");
+            mainURL = configuration.GetValue<string>("WooCommerce:mainURL");
         }
 
         public static IRestResponse sendRequest(string HTTPMethod, Uri URL)

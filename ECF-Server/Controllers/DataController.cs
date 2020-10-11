@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,7 +15,13 @@ namespace ECF_Server.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        RESTconsumer RestCon = new RESTconsumer();
+        private IConfiguration configuration;
+        public DataController(IConfiguration iConfig)
+        {
+            configuration = iConfig;
+            RestCon = new RESTconsumer(configuration);
+        }
+        RESTconsumer RestCon;
         private List<RootOrder> orders;
         // GET: api/data
         [HttpGet]

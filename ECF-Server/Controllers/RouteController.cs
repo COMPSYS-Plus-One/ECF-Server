@@ -78,7 +78,7 @@ namespace ECF_Server.Controllers
         public List<DeliveryRoute> GetCurrentOrdersRoute([FromBody] DeliveryAreas deliveryAreas)
         {
             var areaGroups = deliveryAreas.deliveryAreas.Select(x => x.postcodes).ToList();
-            var restConsumer = new RESTconsumer();
+            var restConsumer = new RESTconsumer(configuration);
             var currentOrderList = restConsumer.apiRequestOrderList("GET", "orders").Where(x => x.status == "processing").ToList();
             //Sort orders by area HERE into a nested list of orders, then run this in a loop
             //Create a list of orders for each List of areas, plus an additional one for any non-conforming areas
