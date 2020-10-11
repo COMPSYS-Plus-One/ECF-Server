@@ -146,13 +146,12 @@ namespace ECF_Server.Controllers
                 //Also need to add the depot location here
                 RouteOptimization routeOptimization = new RouteOptimization(_httpClientFactory.CreateClient());
 
-                long[,] timeWindows = {     //TODO: get these values from orders
-                    {0, 9999999999999},    // depot
-                    {0, 9999999999999},   // 1
-                    {0, 2},  // 2
-                    {0, 9999999999999},  // 3
-                    {0, 999999999999}  // 4
-                };
+                long[,] timeWindows = new long[addressList.Count(),2];
+                for(int i = 0; i < addressList.Count(); i++)
+                {
+                    timeWindows[i, 0] = 0;
+                    timeWindows[i, 1] = 999999999999;
+                }
 
                 List<string> optimisedRoute = routeOptimization.route(addressList, timeWindows);
                 foreach (string a in optimisedRoute)
