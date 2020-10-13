@@ -169,6 +169,12 @@ namespace ECF_Server.Controllers
                 deliveryRoute.orders = optimisedOrders;
                 deliveryRoute.optimisedRoute = optimisedRoute;
 
+                List<int> orderNumbers = new List<int>();
+                orderNumbers.Add(0);
+                orderNumbers.AddRange(optimisedOrders.Select(x => x.id).ToList());
+                orderNumbers.Add(0);
+                deliveryRoute.orderNumbers = orderNumbers;
+
                 deliveryRoutes.Add(deliveryRoute);
             }
 

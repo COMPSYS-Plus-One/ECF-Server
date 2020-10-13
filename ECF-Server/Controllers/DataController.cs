@@ -36,6 +36,8 @@ namespace ECF_Server.Controllers
         {
             try {
                 var order = RestCon.apiRequestOrder("GET", "orders/"+id.ToString());
+
+               
                 return order.serializeOrder();
             }
             catch
