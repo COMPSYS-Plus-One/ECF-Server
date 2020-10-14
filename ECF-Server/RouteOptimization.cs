@@ -251,7 +251,7 @@ public class RouteOptimization
         string dest_address_str = build_address_str(dest_addresses);
         request = request + "&origins=" + origin_address_str + "&destinations=" + 
                             dest_address_str + "&key=" + API_key;
-
+        
         string result =  _httpClient.GetStringAsync(request).Result;
         return result;
 

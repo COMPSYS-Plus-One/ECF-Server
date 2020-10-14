@@ -37,7 +37,6 @@ namespace ECF_Server.Controllers
             try {
                 var order = RestCon.apiRequestOrder("GET", "orders/"+id.ToString());
 
-               
                 return order.serializeOrder();
             }
             catch
@@ -102,7 +101,7 @@ namespace ECF_Server.Controllers
         [HttpPut("create_note/{id}")]
         public void CreateOrderNote([FromBody] string note, int id)
         {
-            RestCon.apiCreateOrderNote("PUT", "orders/" + id.ToString() + "/notes", note);
+            RestCon.apiCreateOrderNote("PUT", "orders/" + id.ToString(), note);
         }
 
         // PUT api/data/5
