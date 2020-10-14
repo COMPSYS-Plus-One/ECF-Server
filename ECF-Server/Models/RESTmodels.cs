@@ -197,7 +197,8 @@ namespace ECF_Server
                 customerNote = this.customer_note,
                 date_completed = this.date_completed,
                 meta_data = this.meta_data,
-                time_window = new List<string>(new string[] { this.meta_data[2].value, this.meta_data[5].value })
+                time_window = new List<string>(new string[] { this.meta_data.Find(x => x.key == "ecf_schedule_time_earliest").value,
+                                                       this.meta_data.Find(x => x.key == "ecf_schedule_time_latest").value })
             };
             return JsonConvert.SerializeObject(O);
         }
