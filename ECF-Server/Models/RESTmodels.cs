@@ -25,7 +25,8 @@ namespace ECF_Server
 
     public class Shipping
     {
-        public string fullAddress {
+        public string fullAddress
+        {
             get
             {
                 return this.address_1 + " " + this.address_2 + " " + this.city + " " + this.postcode + " " + this.country;
@@ -126,7 +127,7 @@ namespace ECF_Server
         public string refund { get; set; }
         public string total { get; set; }
     }
-    
+
 
     //--------order model class--------------------------------------------------------------
     public class RootOrder
@@ -139,7 +140,7 @@ namespace ECF_Server
         public string version { get; set; }
         public string status { get; set; }
         public string currency { get; set; }
-        
+
         //public DateTime date_created;
         //public DateTime date_created_gmt;
         //public DateTime date_modified;
@@ -165,6 +166,14 @@ namespace ECF_Server
         public object date_completed_gmt { get; set; }
         public string cart_hash { get; set; }
         public List<MetaData> meta_data { get; set; }
+        public List<string> time_window
+        {
+            get
+            {
+                return new List<string>(new string[] { this.meta_data.Find(x => x.key == "ecf_schedule_time_earliest").value,
+                                                       this.meta_data.Find(x => x.key == "ecf_schedule_time_latest").value });
+            }
+        }
         public List<LineItem> line_items { get; set; }
         public List<TaxLine> tax_lines { get; set; }
         public List<ShippingLine> shipping_lines { get; set; }
@@ -186,13 +195,16 @@ namespace ECF_Server
                 address = this.shipping.address_1 + " " + this.shipping.address_2 + " " + this.shipping.city + " " + this.shipping.state + " " + this.shipping.postcode + " " + this.shipping.country,
                 phone = this.billing.phone,
                 customerNote = this.customer_note,
-                date_completed = this.date_completed
+                date_completed = this.date_completed,
+                meta_data = this.meta_data,
+                time_window = new List<string>(new string[] { this.meta_data[2].value, this.meta_data[5].value })
             };
             return JsonConvert.SerializeObject(O);
         }
     }
 
-    public class APIorder{
+    public class APIorder
+    {
         //This class is for easy formatting for the API response
         public string response = "ok";
         public int customer_id;
@@ -205,6 +217,8 @@ namespace ECF_Server
         public string customerNote;
         public object date_completed;
         public List<LineItem> line_items;
+        public List<MetaData> meta_data;
+        public List<string> time_window;
     }
 
     //--------customer model class--------------------------------------------------------------
