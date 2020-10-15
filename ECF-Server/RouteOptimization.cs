@@ -78,9 +78,6 @@ public class RouteOptimization
        
     public List<string> route(List<string> addresses, long[,] timeWindows)
     {
-
-        
-        
         // Instantiate the data problem.
         DataModel data = new DataModel(); //TODO pass addresses and apiKey into dataModel instance
 
@@ -173,7 +170,7 @@ public class RouteOptimization
         int max_rows = max_elements / num_addresses;
         // num_addresses = q * max_rows + r (q = 2 and r = 4 in this example).
         int r;
-        int q = Math.DivRem(num_addresses, max_rows, out r); // is this right?
+        int q = Math.DivRem(num_addresses, max_rows, out r); 
 
         List<string> dest_addresses = addresses;
         long[,] duration_matrix = new long[num_addresses, num_addresses];
@@ -197,37 +194,11 @@ public class RouteOptimization
         }
         return duration_matrix;
     }
-
-    public void test(List<string> addresses)
+    private void build_duration_matrix(string response, int currentRow, ref long[,] duration_matrix)
     {
-        long[,] test_duration_matrix = create_time_matrix(addresses, APIKey);
-        Debug.Write("[ ");
-        for (int i = 0; i < test_duration_matrix.GetLength(0); i++)
-        {
-            for (int j=  0; j < test_duration_matrix.GetLength(1); j++)
-            {
-                Debug.Write(" " + test_duration_matrix[i,j].ToString() + ",");
-            }
-            Debug.Write("\r\n");
-        }
-        Debug.Write("]");
-    }
-    /*
-
-            def build_distance_matrix(response):
-        distance_matrix = []
-        for row in response['rows']:
-        row_list = [row['elements'] [j] ['distance'] ['value'] for j in range(len(row['elements']))]
-        distance_matrix.append(row_list)
-        return distance_matrix
-        */
-      private void build_duration_matrix(string response, int currentRow, ref long[,] duration_matrix)
-      {
-        
         JsonDocument json = JsonDocument.Parse(response);
         var root = json.RootElement;
 
-        //long[,] durationMatrix = new long[num_addresses, rows];
         int i = currentRow;
         foreach(JsonElement row in root.GetProperty("rows").EnumerateArray())
         {
@@ -241,9 +212,7 @@ public class RouteOptimization
             i++;
         }
     }
-
-
-    //def send_request(origin_addresses, dest_addresses, API_key):  
+ 
     private string send_request(List<string> origin_addresses, List<string> dest_addresses, string API_key)
     { //Build and send request for the given origin and destination addresses.
         string request = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric";
@@ -257,23 +226,9 @@ public class RouteOptimization
 
     }
    
-    /*
-        request = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial'
-        origin_address_str = build_address_str(origin_addresses)
-        dest_address_str = build_address_str(dest_addresses)
-        request = request + '&origins=' + origin_address_str + '&destinations=' + \
-                            dest_address_str + '&key=' + API_key
-        jsonResult = urllib.urlopen(request).read()
-        response = json.loads(jsonResult)
-        return response'
-    */
-
     private string build_address_str(List<string> addresses) //# Build a pipe-separated string of addresses
     {
         string address_str = String.Join("|", addresses);
-        /*for i in range(len(addresses) - 1):
-          address_str += addresses[i] + '|'
-        address_str += addresses[-1]*/
         return address_str;
     }
         

@@ -32,11 +32,7 @@ namespace ECF_Server.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-
             return new string[] { "value1", "value2" };
-
-
-
         }
 
         // GET api/<RouteController>/5
@@ -92,7 +88,6 @@ namespace ECF_Server.Controllers
             }
             //Go through each order and check the if the postcode is in each list, if so, copy it to correct list, else put it in spare list
 
-
             foreach (var order in currentOrderList)
             {
                 bool isInArea = false;
@@ -110,8 +105,6 @@ namespace ECF_Server.Controllers
                 {
                     ordersByArea.Last().Add(order);
                 }
-
-
             }
 
             //Replce this with DEPOT Adress, should probavbly be stored in config, or provided via the API call
