@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Net.Http;
 using ECF_Server.Models;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +27,25 @@ namespace ECF_Server.Controllers
             configuration = iConfig;
         }
 
+
+        // GET: api/<RouteController>
+        [HttpGet]
+        public IEnumerable<string> Get()
+        {
+
+            return new string[] { "value1", "value2" };
+
+
+
+        }
+
+        // GET api/<RouteController>/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
         // POST api/<RouteController>
         [HttpPost]
         public List<string> Post([FromBody] RouteModel routeModel)
@@ -34,6 +57,21 @@ namespace ECF_Server.Controllers
             //List<string> sortedAddresses = routeOptimization.route(addressList.addresses);
             return routeOptimization.route(routeModel.addressList.addresses, routeModel.timeWindows);
         }
+
+
+        // PUT api/<RouteController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<RouteController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+
+
 
         [Route("orders")]
         [HttpPost]
@@ -54,6 +92,7 @@ namespace ECF_Server.Controllers
             }
             //Go through each order and check the if the postcode is in each list, if so, copy it to correct list, else put it in spare list
 
+
             foreach (var order in currentOrderList)
             {
                 bool isInArea = false;
@@ -71,6 +110,8 @@ namespace ECF_Server.Controllers
                 {
                     ordersByArea.Last().Add(order);
                 }
+
+
             }
 
             //Replce this with DEPOT Adress, should probavbly be stored in config, or provided via the API call
