@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -22,7 +19,7 @@ namespace ECF_Server.Controllers
             RestCon = new RESTconsumer(configuration);
         }
         RESTconsumer RestCon;
-        private List<RootOrder> orders;
+
         // GET: api/data
         [HttpGet]
         public IEnumerable<string> Get()
@@ -61,18 +58,6 @@ namespace ECF_Server.Controllers
         public void CreateOrderNote([FromBody] string note, int id)
         {
             RestCon.apiCreateOrderNote("PUT", "orders/" + id.ToString() + "/notes", note);
-        }
-
-        // PUT api/data/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/data/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
 
         // PUT api/data/set_delivery_time_window_earliest/5
