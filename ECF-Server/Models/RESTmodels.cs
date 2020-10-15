@@ -1,13 +1,10 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace ECF_Server
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Billing
     {
         public string first_name { get; set; }
@@ -140,11 +137,6 @@ namespace ECF_Server
         public string version { get; set; }
         public string status { get; set; }
         public string currency { get; set; }
-
-        //public DateTime date_created;
-        //public DateTime date_created_gmt;
-        //public DateTime date_modified;
-        //public DateTime date_modified_gmt;
         public string discount_total { get; set; }
         public string discount_tax { get; set; }
         public string shipping_total { get; set; }
@@ -226,10 +218,6 @@ namespace ECF_Server
     public class RootCustomer
     {
         public int id { get; set; }
-        //public DateTime date_created { get; set; }
-        //public DateTime date_created_gmt { get; set; }
-        //public DateTime date_modified { get; set; }
-        //public DateTime date_modified_gmt { get; set; }
         public string email { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
