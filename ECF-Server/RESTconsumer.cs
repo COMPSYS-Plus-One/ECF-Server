@@ -155,41 +155,5 @@ namespace ECF_Server
                 "}";
             IRestResponse response = sendPut(HTTPMethod, BASE_URL, body);
         }
-        
-        /// <summary>
-        /// This method is used to set the earliset time window for a order
-        /// </summary>
-        /// <param name="HTTPMethod">HTTP request method e.g GET, POST, PUT, etc.</param>
-        /// <param name="requestURL">The extension to be added to the base URL. Where the base URL is: https://epic.elliscreekfarm.co.nz/wp-json/wc/v3/ </param>
-        /// <param name="timeConstraint">The time that is to be set</param>
-        public void apiSetDelieveryWindowEarliest(string HTTPMethod, string requestURL, string timeConstraint)
-        {
-
-            var BASE_URL = new Uri(mainURL + requestURL);
-            string body = "{" +
-                "\"meta_data\":[ " +
-                "{ \"key\":\"ecf_schedule_time_earliest\", \"value\": \""+ timeConstraint + "\"}" +
-                "]" +
-                "}";
-            IRestResponse response = sendPut(HTTPMethod, BASE_URL, body);
-        }
-
-        /// <summary>
-        /// This method is used to set the latest time window for a order
-        /// </summary>
-        /// <param name="HTTPMethod">HTTP request method e.g GET, POST, PUT, etc.</param>
-        /// <param name="requestURL">The extension to be added to the base URL. Where the base URL is: https://epic.elliscreekfarm.co.nz/wp-json/wc/v3/ </param>
-        /// <param name="timeConstraint">The time that is to be set</param>
-        public void apiSetDelieveryWindowLatest(string HTTPMethod, string requestURL, string timeConstraint)
-        {
-
-            var BASE_URL = new Uri(mainURL + requestURL);
-            string body = "{" +
-                "\"meta_data\":[ " +
-                "{ \"key\":\"ecf_schedule_time_latest\", \"value\": \"" + timeConstraint + "\"}" +
-                "]" +
-                "}";
-            IRestResponse response = sendPut(HTTPMethod, BASE_URL, body);
-        }
     }
 }

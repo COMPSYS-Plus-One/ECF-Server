@@ -59,21 +59,6 @@ namespace ECF_Server.Controllers
         {
             RestCon.apiCreateOrderNote("PUT", "orders/" + id.ToString() + "/notes", note);
         }
-
-        // PUT api/data/set_delivery_time_window_earliest/5
-        [HttpPut("set_delivery_time_window_earliest/{id}")]
-        public void CreateDriverTimeEarliest([FromBody] string timeConstraint, int id)
-        {
-            RestCon.apiSetDelieveryWindowEarliest("PUT", "orders/" + id.ToString(), timeConstraint);
-        }
-
-        // PUT api/data/set_delivery_time_window_latest/5
-        [HttpPut("set_delivery_time_window_latest/{id}")]
-        public void CreateDriverTimeLatest([FromBody] string timeConstraint, int id)
-        {
-            RestCon.apiSetDelieveryWindowLatest("PUT", "orders/" + id.ToString(), timeConstraint);
-        }
-
     }
 
     public class ErrorResponse
